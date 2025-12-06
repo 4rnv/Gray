@@ -22,9 +22,9 @@ with open('inverted_index_pos.json', 'r') as f:
 query_parsed, is_phrase_query = getQuery()
 if type(query_parsed)==str:
     try:
-        docs = [posting[0] for posting in index[query_parsed]]
+        result_docs = [posting[0] for posting in index[query_parsed]]
     except:
-        docs = []
+        result_docs = []
 elif type(query_parsed)==list and not is_phrase_query:
     docs = set()
     for query in query_parsed:
@@ -34,22 +34,42 @@ elif type(query_parsed)==list and not is_phrase_query:
             docs |= set(term_docs)
         except:
             pass
-    docs=list(docs)
+    result_docs=list(docs)
 elif type(query_parsed)==list and is_phrase_query:
     docs = set()
-    docs2 = []
+    docs_set = []
     for query in query_parsed:
         try:
+            if query not in index:
+                print(f"No results for {query}")
+                break
             term_docs = set(posting[0] for posting in index[query])
             print(f"query: {query} {len(term_docs)}", term_docs)
-            docs2.append(term_docs)
-            common_values = set.intersection(*docs2)
-            docs |= set(common_values)
+            docs_set.append(term_docs)
+            common_values = set.intersection(*docs_set)
+            docs = set(common_values)
         except:
             pass
-    docs=list(docs)
-print(docs2)
-if len(docs)==0:
+    result_docs=list(docs)
+    result_docs_copy = result_docs
+    result_docs = []
+    for doc in result_docs_copy:
+        positions_lists = []
+        for term_idx, term in enumerate(query_parsed):
+            for posting in index[term]:
+                if posting[0] == doc:
+                    positions_lists.append(posting[1])
+                    break
+        adjusted_positions = []
+        for i, positions in enumerate(positions_lists):
+            adjusted = [pos - i for pos in positions]
+            adjusted_positions.append(set(adjusted))
+        common_positions = set.intersection(*adjusted_positions)
+        if common_positions:
+            result_docs.append(doc)
+
+    print(docs_set)
+if len(result_docs)==0:
     print(f"No results for {query_parsed}")
 else:
-    print(f"Length: {len(docs)}", docs)
+    print(f"Length: {len(result_docs)}", result_docs)
