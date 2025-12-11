@@ -19,7 +19,6 @@ def getQuery():
     return None, False
 
 if __name__=='__main__':
-
     with open('inverted_index_pos.json', 'r') as f:
         index : dict = json.load(f)
 
