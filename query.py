@@ -1,10 +1,14 @@
 import json
 import re
 import time
+import sys
 from tfidf import ranking
 
-def getQuery():
-    query = input("Enter query: ").lower().strip()
+def getQuery(query_input : str):
+    if not query_input or query_input.strip()=="":
+        query = input("Enter query: ").lower().strip()
+    else:
+        query = query_input
     if not query:
         return None, False
     pattern = r'^[\'\"].*[\'\"]$'
@@ -21,8 +25,12 @@ def getQuery():
 if __name__=='__main__':
     with open('inverted_index_pos.json', 'r') as f:
         index : dict = json.load(f)
-
-    query_parsed, is_phrase_query = getQuery()
+    if len(sys.argv) > 1:
+        query_input = sys.argv[1]
+    else:
+        query_input = ""
+    result_docs = []
+    query_parsed, is_phrase_query = getQuery(query_input)
     if type(query_parsed)==str:
         try:
             result_docs = [posting[0] for posting in index[query_parsed]]
