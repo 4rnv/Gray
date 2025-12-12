@@ -2,13 +2,13 @@ import json
 import re
 import time
 import sys
-from tfidf import ranking
+from ranking import ranking
 
 def getQuery(query_input : str):
     if not query_input or query_input.strip()=="":
         query = input("Enter query: ").lower().strip()
     else:
-        query = query_input
+        query = query_input.lower().strip()
     if not query:
         return None, False
     pattern = r'^[\'\"].*[\'\"]$'
@@ -89,6 +89,6 @@ if __name__=='__main__':
     elif type(query_parsed)==list:
         query_terms = query_parsed
     start = time.time()
-    ranks = ranking(result_docs, index, query_terms)
+    ranks = ranking(result_docs, index, query_terms, method="tfidf")
     end = time.time()
     print("Ranking time : ", end - start)
