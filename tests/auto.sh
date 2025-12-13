@@ -1,6 +1,7 @@
 #!/bin/bash
 
 query="hockey"
+method="tfidf"
 num_runs=10
 output_file="ranking_test_results.csv"
 
@@ -11,7 +12,7 @@ total_time=0
 for i in $(seq 1 $num_runs); do
     echo "Run $i/$num_runs"
     
-    output=$(python query.py "$query" 2>&1)
+    output=$(python query.py "$query" "$method" 2>&1)
     
     ranking_time=$(echo "$output" | grep "Ranking time" | awk '{print $4}')
     
