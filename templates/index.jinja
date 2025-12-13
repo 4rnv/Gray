@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <body style="margin: 0 auto; width: 800px;">
+    <form action="/search" method="get">
+    <input name="q" value="{{ query }}" placeholder="Enter query"">
+    <fieldset>
+        <legend>Ranking method:</legend>
+        <div>
+            <input type="radio" id="tfidf" name="method" value="tfidf" checked/>
+            <label for="tfidf">TF-IDF</label>
+
+            <input type="radio" id="cosine" name="method" value="cosine" />
+            <label for="cosine">Cosine</label>
+        </div>
+    </fieldset>
+    <button type="submit">Search</button>
+    </form>
+
+    {% if results %}
+      <ul>
+        {% for r in results %}
+        <li>
+            <a href="/doc/{{ r.id }}">{{ r.title }}</a>
+            ({{ "%.4f"|format(r.score) }})<br>
+            {{ r.text | truncate(100, True) }}
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No results.</p>
+    {% endif %}
+  </body>
+</html>

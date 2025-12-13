@@ -22,13 +22,9 @@ def getQuery(query_input : str):
         return query_list[0], False
     return None, False
 
-if __name__=='__main__':
+def preliminary_search(query_input : str, method : str):
     with open('inverted_index_pos.json', 'r') as f:
         index : dict = json.load(f)
-    if len(sys.argv) > 1:
-        query_input = sys.argv[1]
-    else:
-        query_input = ""
     result_docs = []
     query_parsed, is_phrase_query = getQuery(query_input)
     if type(query_parsed)==str:
@@ -89,6 +85,14 @@ if __name__=='__main__':
     elif type(query_parsed)==list:
         query_terms = query_parsed
     start = time.time()
-    ranks = ranking(result_docs, index, query_terms, method="tfidf")
+    ranks = ranking(result_docs, index, query_terms, method=method)
     end = time.time()
     print("Ranking time : ", end - start)
+    return ranks
+
+if __name__=='__main__':
+    if len(sys.argv) > 1:
+        query_input = sys.argv[1]
+    else:
+        query_input = ""
+    ranks = preliminary_search(query_input, method=sys.argv[2])
