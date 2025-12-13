@@ -7,11 +7,11 @@ with open("inverted_index_pos.json", "r") as f:
     INDEX = json.load(f)
 with open("forward_index.json", "r", encoding="utf-8") as f:
     DOCS = json.load(f)
-DOCS_BY_ID = {str(d["id"]): d for d in DOCS}
+FORWARD_INDEX = {str(d["id"]): d for d in DOCS}
 
 @app.get("/doc/<doc_id>")
 def doc_page(doc_id):
-    doc = DOCS_BY_ID.get(str(doc_id))
+    doc = FORWARD_INDEX.get(str(doc_id))
     if not doc:
         abort(404)
     return render_template("doc.jinja", doc=doc)
@@ -27,7 +27,7 @@ def search():
     ranked = preliminary_search(q, method)
     results = []
     for doc_id, score in ranked:
-        doc = DOCS_BY_ID.get(str(doc_id))
+        doc = FORWARD_INDEX.get(str(doc_id))
         if not doc:
             continue
         results.append({

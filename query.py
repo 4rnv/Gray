@@ -3,6 +3,7 @@ import re
 import time
 import sys
 from ranking import ranking
+from config import METHODS, DEFAULT_METHOD
 
 def getQuery(query_input : str):
     if not query_input or query_input.strip()=="":
@@ -27,6 +28,8 @@ def preliminary_search(query_input : str, method : str):
         index : dict = json.load(f)
     result_docs = []
     query_parsed, is_phrase_query = getQuery(query_input)
+    if method not in METHODS:
+        method = DEFAULT_METHOD
     if type(query_parsed)==str:
         try:
             result_docs = [posting[0] for posting in index[query_parsed]]
@@ -93,6 +96,7 @@ def preliminary_search(query_input : str, method : str):
 if __name__=='__main__':
     if len(sys.argv) > 1:
         query_input = sys.argv[1]
+        ranks = preliminary_search(query_input, method=sys.argv[2])
     else:
         query_input = ""
-    ranks = preliminary_search(query_input, method=sys.argv[2])
+        ranks = preliminary_search(query_input, method=DEFAULT_METHOD)
