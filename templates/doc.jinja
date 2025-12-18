@@ -1,3 +1,8 @@
 <a href="/">Back</a>
 <h2>{{ doc.title }}</h2>
+{% for s in similar %}
+<li>
+    <a href="/doc/{{s.id}}">{{s.title}} {{ "%.4f"|format(s.score) }}</a>
+</li>
+{% endfor %}
 <pre style="white-space: pre-wrap;">{{ doc.text }}</pre>

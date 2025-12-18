@@ -8,7 +8,7 @@ stop_words = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
 markup_tags = ["bgcolor", "rowspan", "colspan", "category", "font-size", "align", "style", "width", "class", "dfffdf", "colspan", "bgcolor", "color", "wikitable", "e0e0e0", "row", "col", "959ffd", "00fe95", "valign", "font", "size", "efcfff", "cfcfff", "dfdfdf", "ffffbf"]
 
 tokenized_data = []
-clean = []
+forward_index = []
 counter = 0
 for i in raw:
     title = str(i["title"]).lower()
@@ -26,10 +26,10 @@ for i in raw:
         "title": title,
         "tokens": stemmed_tokens
     })
-    clean.append({"id" : counter, "title": title, "text": clean_text})
+    forward_index.append({"id" : counter, "title": title, "text": clean_text})
 
 with open("wikipedia_clean.json", mode="w", encoding="utf-8") as f:
-    json.dump(clean, f)
+    json.dump(forward_index, f)
 
 with open("wikipedia_tokenized.json", mode="w", encoding="utf-8") as f:
     json.dump(tokenized_data, f, ensure_ascii=False, indent=2)
