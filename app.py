@@ -5,7 +5,7 @@ from query import preliminary_search
 app = Flask(__name__)
 with open("inverted_index_pos.json", "r") as f:
     INDEX = json.load(f)
-with open("forward_index.json", "r", encoding="utf-8") as f:
+with open("wikipedia_clean.json", "r", encoding="utf-8") as f:
     DOCS = json.load(f)
 FORWARD_INDEX = {str(d["id"]): d for d in DOCS}
 

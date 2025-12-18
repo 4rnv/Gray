@@ -3,11 +3,11 @@ import re
 from collections import defaultdict
 
 with open("wikipedia_tokenized.json", mode="r", encoding="utf-8") as f:
-    forward_index = json.load(f)
+    wikipedia_tokenized = json.load(f)
 inverted_index = {}
 
 inverted = defaultdict(lambda: defaultdict(list))
-for document in forward_index:
+for document in wikipedia_tokenized:
     doc_id = document["id"]
     for pos, token in enumerate(document["tokens"]):
         inverted[token][doc_id].append(pos)

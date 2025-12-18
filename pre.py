@@ -8,7 +8,7 @@ stop_words = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
 markup_tags = ["bgcolor", "rowspan", "colspan", "category", "font-size", "align", "style", "width", "class", "dfffdf", "colspan", "bgcolor", "color", "wikitable", "e0e0e0", "row", "col", "959ffd", "00fe95", "valign", "font", "size", "efcfff", "cfcfff", "dfdfdf", "ffffbf"]
 
 tokenized_data = []
-forward_index = []
+clean = []
 counter = 0
 for i in raw:
     title = str(i["title"]).lower()
@@ -16,6 +16,8 @@ for i in raw:
     combined_text = f"{title} {text}"
     tokens = re.findall(r'\b[a-z]+\b', combined_text)
     tokens = [token for token in tokens if token not in stop_words and token not in markup_tags]
+    clean_tokens = re.findall(r'\b[a-z0-9]+\b', combined_text)
+    clean_text = ' '.join([token for token in clean_tokens if token not in markup_tags]).capitalize()
     #stemmed_tokens = [stemmer.stem(token) for token in tokens]
     stemmed_tokens = tokens
     counter += 1
@@ -24,13 +26,10 @@ for i in raw:
         "title": title,
         "tokens": stemmed_tokens
     })
-    forward_index.append({"id": counter, "title": i["title"], "text": i["text"]})
+    clean.append({"id" : counter, "title": title, "text": clean_text})
 
 with open("wikipedia_clean.json", mode="w", encoding="utf-8") as f:
-    json.dump(raw, f)
-
-with open("forward_index.json", "w", encoding="utf-8") as f:
-    json.dump(forward_index, f, ensure_ascii=False)
+    json.dump(clean, f)
 
 with open("wikipedia_tokenized.json", mode="w", encoding="utf-8") as f:
     json.dump(tokenized_data, f, ensure_ascii=False, indent=2)
